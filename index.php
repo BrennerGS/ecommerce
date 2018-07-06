@@ -21,7 +21,7 @@ $app->get('/', function() {
 });
 
 
-$app->get('/admin', function() {
+$app->get("/admin", function() {
     
 
 	User::verifyLogin();
@@ -33,7 +33,7 @@ $app->get('/admin', function() {
 });
 
 
-$app->get('/admin/login', function() {
+$app->get("/admin/login", function() {
     
 	$page = new PageAdmin([
 		"header"=>false,
@@ -45,7 +45,7 @@ $app->get('/admin/login', function() {
 
 });
 
-$app->post('/admin/login', function(){
+$app->post("/admin/login", function(){
 
 	User::login($_POST["login"], $_POST["password"]);
 
@@ -54,7 +54,7 @@ $app->post('/admin/login', function(){
 
 });
 
-$app->get('/admin/logout', function(){
+$app->get("/admin/logout", function(){
 
 	User::logout();
 
@@ -63,7 +63,7 @@ $app->get('/admin/logout', function(){
 
 });
 
-$app->get('/admin/users', function(){
+$app->get("/admin/users", function(){
 
 	User::verifyLogin();
 
@@ -78,7 +78,7 @@ $app->get('/admin/users', function(){
 
 });
 
-$app->get('/admin/users/create', function(){
+$app->get("/admin/users/create", function(){
 
 	User::verifyLogin();
 
@@ -90,7 +90,7 @@ $app->get('/admin/users/create', function(){
 
 });
 
-$app->get('/admin/users/:iduser/delete', function($iduser){
+$app->get("/admin/users/:iduser/delete", function($iduser){
 
 	User::verifyLogin();
 
@@ -105,7 +105,7 @@ $app->get('/admin/users/:iduser/delete', function($iduser){
 
 });
 
-$app->get('/admin/users/:iduser', function($iduser){
+$app->get("/admin/users/:iduser", function($iduser){
 
 	User::verifyLogin();
 
@@ -138,7 +138,7 @@ $app->post("/admin/users/create", function(){
 	exit;
 });
 
-$app->post('/admin/users/:iduser', function($iduser){
+$app->post("/admin/users/:iduser", function($iduser){
 
 	User::verifyLogin();
 
@@ -156,7 +156,7 @@ $app->post('/admin/users/:iduser', function($iduser){
 	exit;
 });
 
-$app->get('/admin/forgot', function(){
+$app->get("/admin/forgot", function(){
 
 	$page = new PageAdmin([
 		"header"=>false,
@@ -168,7 +168,7 @@ $app->get('/admin/forgot', function(){
 
 });
 
-$app->post('/admin/forgot', function(){
+$app->post("/admin/forgot", function(){
 
 	$user = User::getForgot($_POST["email"]);
 
@@ -178,7 +178,7 @@ $app->post('/admin/forgot', function(){
 
 });
 
-$app->get('/admin/forgot/sent', function(){
+$app->get("/admin/forgot/sent", function(){
 
 	$page = new PageAdmin([
 		"header"=>false,
@@ -190,7 +190,7 @@ $app->get('/admin/forgot/sent', function(){
 
 });
 
-$app->get('/admin/forgot/reset', function(){
+$app->get("/admin/forgot/reset", function(){
 
 	$user = User::validForgotDecrypt($_GET["code"]);
 
@@ -208,7 +208,7 @@ $app->get('/admin/forgot/reset', function(){
 
 });
 
-$app->post('/admin/forgot/reset', function(){
+$app->post("/admin/forgot/reset", function(){
 
 	$forgot = User::validForgotDecrypt($_POST["code"]);
 
@@ -233,7 +233,7 @@ $app->post('/admin/forgot/reset', function(){
 	$page->setTpl("forgot-reset-success");
 });
 
-$app->get('/admin/categories', function(){
+$app->get("/admin/categories", function(){
 
 	User::verifyLogin();
 
@@ -248,7 +248,7 @@ $app->get('/admin/categories', function(){
 
 });
 
-$app->get('/admin/categories/create', function(){
+$app->get("/admin/categories/create", function(){
 	User::verifyLogin();
 
 	$page = new PageAdmin();
@@ -258,7 +258,7 @@ $app->get('/admin/categories/create', function(){
 
 });
 
-$app->post('/admin/categories/create', function(){
+$app->post("/admin/categories/create", function(){
 
 	User::verifyLogin();
 
@@ -273,7 +273,7 @@ $app->post('/admin/categories/create', function(){
 
 });
 
-$app->get('/admin/categories/:idcategory/delete', function($idcategory){
+$app->get("/admin/categories/:idcategory/delete", function($idcategory){
 
 	User::verifyLogin();
 
@@ -288,7 +288,7 @@ $app->get('/admin/categories/:idcategory/delete', function($idcategory){
 
 });
 
-$app->get('/admin/categories/:idcategory', function($idcategory){
+$app->get("/admin/categories/:idcategory", function($idcategory){
 
 	User::verifyLogin();
 
@@ -305,7 +305,7 @@ $app->get('/admin/categories/:idcategory', function($idcategory){
 
 });
 
-$app->post('/admin/categories/:idcategory', function($idcategory){
+$app->post("/admin/categories/:idcategory", function($idcategory){
 
 	User::verifyLogin();
 
@@ -321,6 +321,22 @@ $app->post('/admin/categories/:idcategory', function($idcategory){
 	exit;
 
 });
+
+$app->get("/categories/:idcategory", function($idcategory){
+
+	$category = new Category();
+
+	$category->get((int)$idcategory);
+
+	$page = new Page();
+
+	$page->setTpl("category", array(
+		"category"=>$category->getValues(),
+		"products"=>[]
+	));
+
+});
+
 
 $app->run();
 
