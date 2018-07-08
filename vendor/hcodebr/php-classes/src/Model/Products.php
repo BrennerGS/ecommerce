@@ -22,6 +22,20 @@ class Products extends Model {
 
 	}
 
+	public static function checkList($list)
+	{
+
+		foreach ($list as &$row) {
+			$p = new Products();
+			$p->setData($row);
+			$row = $p->getValues();
+		}
+
+		return $list;
+
+
+	}
+
 	public function save()
 	{
 
@@ -62,12 +76,24 @@ class Products extends Model {
 	public function delete()
 	{
 
+		$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR .
+			 "res" . DIRECTORY_SEPARATOR . 
+			 "site" . DIRECTORY_SEPARATOR . 
+			 "img" . DIRECTORY_SEPARATOR . 
+			 "products" . DIRECTORY_SEPARATOR .
+			 $this->getidproduct().".jpg";
+
 		$sql = new Sql();
+
+		
 
 		$sql->query("DELETE FROM tb_products WHERE idproduct = :idproduct",
 			array(
 				":idproduct"=>$this->getidproduct()
 		));
+
+		unlink($dist);
+
 
 
 	}

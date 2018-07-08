@@ -16,6 +16,7 @@ $app->config('debug', true);
 
 // Site Clientes 
 require_once("site.php");
+require_once("function.php");
 
 
 // Parte Administrativa
