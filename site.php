@@ -19,7 +19,11 @@ $app->get('/', function() {
 
 });
 
+
+
 $app->get("/categories/:idcategory", function($idcategory){
+
+	User::verifyLogin();
 
 	$category = new Category();
 
@@ -29,9 +33,8 @@ $app->get("/categories/:idcategory", function($idcategory){
 
 	$page->setTpl("category", array(
 		"category"=>$category->getValues(),
-		"products"=>[]
+		"products"=>Products::checkList($category->getProducts())
 	));
-
 });
 
 ?>
