@@ -2,11 +2,10 @@
 
 namespace Hcode\Model;
 
-session_start();
-
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
+use \Hcode\Model\Cart;
 
 
 
@@ -14,6 +13,47 @@ class User extends Model {
 
 	const SESSION = "User";
 	const SECRET = "HcodePhp7_Secretteste";
+
+	public static function getFromSession()
+	{
+		$user = new User();
+
+		if(isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0)
+		{
+			$user->setData($_SESSION[User::SESSION]);
+		}
+		return $user;
+
+	}
+	
+
+	public static function checkLogin($inadmin = true)
+	{
+		
+
+		if(
+			!isset($_SESSION[User::SESSION])
+			||
+			!$_SESSION[User::SESSION]
+			||
+			!(int)$_SESSION[User::SESSION]["iduser"] > 0
+		) {
+			//Nao esta logado
+			return false;
+		}else{
+
+			if ($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin'] === true) {
+				return true;
+			} else if($inadmin === false) {
+				return true;
+			}else{
+				return false;
+			}
+			
+
+		}
+
+	}
 
 	public static function login($login, $password)
 	{
@@ -26,7 +66,7 @@ class User extends Model {
 
 		if(count($results) === 0)
 		{
-			//throw new \Exception("Usuário inexistente ou senha inválida.");
+			throw new \Exception("Usuário inexistente ou senha inválida.");
 			header("Location: /admin/login?erro=Usuário inexistente ou senha inválida.");
 			exit;
 		}
@@ -39,6 +79,7 @@ class User extends Model {
 			$user = new User();
 
 			$user->setData($data);
+			//var_dump($results[0]);exit;
 
 			$_SESSION[User::SESSION] = $user->getValues();
 
@@ -56,18 +97,14 @@ class User extends Model {
 	public static function verifyLogin($inadmin = true)
 	{
 
-		if(
-			!isset($_SESSION[User::SESSION])
-			||
-			!$_SESSION[User::SESSION]
-			||
-			!(int)$_SESSION[User::SESSION]["iduser"] > 0
-			||
-			(bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin
-		){
-			header("Location: /admin/login");
+		if (!User::checkLogin($inadmin)) {
+			if ($inadmin) {
+				header("Location: /admin/login");
+			} else {
+				header("Location: /login");
+			}
 			exit;
-		}
+		} 
 
 
 	}
