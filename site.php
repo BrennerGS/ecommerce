@@ -74,7 +74,8 @@ $app->get("/cart", function(){
 
 	$page->setTpl("cart", [
 		'cart'=>$cart->getValues(),
-		'products'=>$cart->getProducts()
+		'products'=>$cart->getProducts(),
+		'error'=>Cart::getMsgError()
 	]);
 
 });
@@ -94,9 +95,12 @@ $app->get("/cart/:idproduct/add", function($idproduct){
 		
 		$cart->addProduct($Products);
 
+		
+
 	}
 
-	header("Location: /cart");
+
+	header("Location: /cart#prod_scroll");
 	exit;
 
 });
@@ -112,7 +116,9 @@ $app->get("/cart/:idproduct/minus", function($idproduct){
 
 	$cart->removeProduct($Products);
 
-	header("Location: /cart");
+	
+
+	header("Location: /cart#prod_scroll");
 	exit;
 
 });
@@ -127,9 +133,21 @@ $app->get("/cart/:idproduct/remove", function($idproduct){
 
 	$cart->removeProduct($Products, true);
 
-	header("Location: /cart");
+	header("Location: /cart#prod_scroll");
 	exit;
  
+ });
+
+
+$app->post("/cart/freight", function(){
+
+	$cart = Cart::getFromSession();
+
+	$cart->setFreight($_POST['zipcode']);
+
+	header("Location: /cart#prod_scroll");
+	exit;
+
  });
 
 

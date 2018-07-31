@@ -10,7 +10,7 @@
     </div>
 </div> <!-- End Page title area -->
 
-<div class="single-product-area">
+<div id="prod_scroll" class="single-product-area">
     <div class="zigzag-bottom"></div>
     <div class="container">
         <div class="row">
@@ -20,12 +20,19 @@
                     <div class="woocommerce">
 
                         <form action="/checkout">
-                            
-                            <div class="alert alert-danger" role="alert">
-                            Error!
-                            </div>
+
+                            <?php if( $error!='' ){ ?>
+
+                                <div class="alert alert-danger" role="alert">
+                                Error! <?php echo htmlspecialchars( $error, ENT_COMPAT, 'UTF-8', FALSE ); ?>
+
+                                </div>
+                            <?php } ?>
+
 
                             <table cellspacing="0" class="shop_table cart">
+
+                                
                                 <thead>
                                     <tr>
                                         <th class="product-remove">&nbsp;</th>
@@ -37,6 +44,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php if( $products==null ){ ?>
+
+                                     <tr class="cart_item">
+                                        <td class="product-remove" colspan="6">
+                                             Nenhum Produto No Carrinho
+                                        </td>
+
+                                        
+                                     </tr>
+                                    <?php } ?>
+
+
+                                    <?php if( $products!='' ){ ?>
+
+                                     
+                                    
                                     <?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
 
                                     <tr class="cart_item">
@@ -70,8 +93,12 @@
                                     </tr>
                                     <?php } ?>
 
+
+                                    <?php } ?>
+
                                 </tbody>
                             </table>
+
 
                             <div class="cart-collaterals">
 
@@ -81,11 +108,12 @@
                                     
                                     <div class="coupon">
                                         <label for="cep">CEP:</label>
-                                        <input type="text" placeholder="00000-000" value="" id="cep" class="input-text" name="zipcode">
+                                        <input type="text" placeholder="00000-000" value="" id="cep" class="input-text" name="zipcode" value="<?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
                                         <input type="submit" formmethod="post" formaction="/cart/freight" value="CÁLCULAR" class="button">
                                     </div>
 
                                 </div>
+                                 <?php if( $products!=null ){ ?>
 
                                 <div class="cart_totals ">
 
@@ -95,21 +123,22 @@
                                         <tbody>
                                             <tr class="cart-subtotal">
                                                 <th>Subtotal</th>
-                                                <td><span class="amount">$700.00</span></td>
+                                                <td><span class="amount">R$<?php echo formatPrice($cart["vlsubtotal"]); ?></span></td>
                                             </tr>
 
                                             <tr class="shipping">
                                                 <th>Frete</th>
-                                                <td>$5.00 <small>prazo de 0 dia(s)</small></td>
+                                                <td>R$<?php echo formatPrice($cart["vlfreight"]); ?> <?php if( $cart["nrdays"] > 0 ){ ?> <small>prazo de <?php echo htmlspecialchars( $cart["nrdays"], ENT_COMPAT, 'UTF-8', FALSE ); ?> dia(s)</small><?php } ?></td>
                                             </tr>
 
                                             <tr class="order-total">
                                                 <th>Total</th>
-                                                <td><strong><span class="amount">$705.00</span></strong> </td>
+                                                <td><strong><span class="amount">R$<?php echo formatPrice($cart["vltotal"]); ?></span></strong> </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
+                                 <?php } ?>
 
                             </div>
 
