@@ -80,6 +80,7 @@ $app->get("/cart", function(){
 
 });
 
+//************************************** Rev
 
 $app->get("/cart/:idproduct/add", function($idproduct){
 
@@ -148,6 +149,58 @@ $app->post("/cart/freight", function(){
 	header("Location: /cart#prod_scroll");
 	exit;
 
+ });
+
+$app->get("/checkout", function(){
+
+ 	User::verifyLogin(false);
+
+ 	$cart = Cart::getFromSession();
+
+ 	$page = new Page();
+
+ 	$page->setTpl("checkout", [
+		'cart'=>$cart->getValues(),
+		'address'=>[]
+	]);
+
+ });
+
+ $app->get("/login", function(){
+
+ 	$page = new Page();
+
+ 	$page->setTpl("login", [
+		'loginError'=>User::getError()
+	]);
+
+ });
+
+ $app->post("/login", function(){
+ 	try {
+
+ 		User::login($_POST["login"], $_POST["password"]);
+
+ 	} catch (Exception $e) {
+
+ 		User::setError($e->getMessage());
+
+ 	}
+
+ 	header("Location: /checkout");
+	exit;
+
+ });
+
+
+ $app->get("/logout", function(){
+
+ 	User::logout();
+
+ 	header("Location: /login");
+
+	exit;
+	
  });
 
 

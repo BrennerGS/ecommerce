@@ -108,12 +108,14 @@
                                     
                                     <div class="coupon">
                                         <label for="cep">CEP:</label>
-                                        <input type="text" placeholder="00000-000" value="" id="cep" class="input-text" name="zipcode" value="<?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
+                                        <input type="text" placeholder="00000-000" id="cep" class="input-text" name="zipcode" value="<?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
                                         <input type="submit" formmethod="post" formaction="/cart/freight" value="CÁLCULAR" class="button">
                                     </div>
 
                                 </div>
                                  <?php if( $products!=null ){ ?>
+
+                                    <?php if( $error==null ){ ?>
 
                                 <div class="cart_totals ">
 
@@ -138,6 +140,8 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                    <?php } ?>
+
                                  <?php } ?>
 
                             </div>

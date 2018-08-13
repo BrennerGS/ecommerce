@@ -19,7 +19,7 @@ class Cart extends Model {
 
 		$cart = new Cart();
 
-		if(isset($_SESSION[Cart::SESSION]) && (int)$_SESSION[Cart::SESSION]['idcart'] > 0){
+		if(!isset($_SESSION[Cart::SESSION]) && (int)$_SESSION[Cart::SESSION]['idcart'] > 0){
 
 			$cart->get((int)$_SESSION[Cart::SESSION]['idcart']);
 
@@ -221,6 +221,7 @@ class Cart extends Model {
 
 			if ($totals['vlheight'] < 2) $totals['vlheight'] = 2;
 			if ($totals['vllength'] < 16) $totals['vllength'] = 16;
+			if ($totals['vlwidth'] < 11) $totals['vlwidth'] = 11;
 
 			$qs = http_build_query([
 				'nCdEmpresa'=>'',
