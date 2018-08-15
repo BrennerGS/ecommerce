@@ -3,16 +3,24 @@
         	<!-- Slider -->
 			<div class="block-slider block-slider4">
 				<ul class="" id="bxslider-home4">
+                    {loop="$products"}
+
 					<li>
-						<img src="/res/site/img/h4-slide.png" alt="Slide">
+                      <a href="/products/{$value.desurl}" class="view-details-link">
+						<img src="/res/site/img/h4-slide2.png" alt="Acrecentar tabela Propaganda img" style="height: 400px" alt="Slide">
 						<div class="caption-group">
 							<h2 class="caption title">
-								iPhone <span class="primary">6 <strong>Plus</strong></span>
+								{$value.desproduct}
 							</h2>
-							<h4 class="caption subtitle">Dual SIM</h4>
-							<a class="caption button-radius" href="#"><span class="icon"></span>Comprar</a>
+							<h4 class="caption subtitle">R$ {function="formatPrice($value.vlprice)"}</h4>
+							<a class="caption button-radius" href="/cart/{$value.idproduct}/add"><span class="icon"></span>Comprar</a>
 						</div>
+                       </a>
 					</li>
+
+                    {/loop}
+
+
 					<li><img src="/res/site/img/h4-slide2.png" alt="Slide">
 						<div class="caption-group">
 							<h2 class="caption title">

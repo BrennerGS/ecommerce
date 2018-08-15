@@ -7,6 +7,7 @@ use \Hcode\Model\User;
 use \Hcode\Model\Category;
 use \Hcode\Model\Products;
 use \Hcode\Model\Cart;
+use \Hcode\Model\Address;
 
 $app->get('/', function() {
 
@@ -157,11 +158,13 @@ $app->get("/checkout", function(){
 
  	$cart = Cart::getFromSession();
 
+ 	$address = new Address();
+
  	$page = new Page();
 
  	$page->setTpl("checkout", [
 		'cart'=>$cart->getValues(),
-		'address'=>[]
+		'address'=>$address->getValues()
 	]);
 
  });
@@ -171,7 +174,7 @@ $app->get("/checkout", function(){
  	$page = new Page();
 
  	$page->setTpl("login", [
-		'loginError'=>User::getError()
+		'error'=>User::getError()
 	]);
 
  });

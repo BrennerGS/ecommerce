@@ -67,12 +67,13 @@ class User extends Model {
 
 		if(count($results) === 0)
 		{
-			throw new \Exception("Usuário inexistente ou senha inválida.");
-			header("Location: /admin/login?erro=Usuário inexistente ou senha inválida.");
+			throw new \Exception("Usuário existente ou senha inválida.");
 			exit;
 		}
 
 		$data = $results[0];
+
+		$data["desperson"] = utf8_encode($data["desperson"]);
 
 		if(password_verify($password, $data["despassword"]) === true)
 		{
@@ -87,8 +88,8 @@ class User extends Model {
 			return $user;
 
 		} else {
-			//throw new \Exception("Usuário inexistente ou senha inválida.");
-			header("Location: /admin/login?erro=Usuário inexistente ou senha inválida.");
+			throw new \Exception("Usuário inexistente ou senha inválida.");
+			
 			exit;
 		}
 
@@ -136,9 +137,9 @@ class User extends Model {
 
 		$results = $sql->select("CALL `sp_users_save`(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
-				":desperson"=>$this->getdesperson(),
+				":desperson"=>utf8_decode($this->getdesperson()),
 				":deslogin"=>$this->getdeslogin(),
-				":despassword"=>$this->getdespassword(),
+				":despassword"=>User::getPasswordHash($this->getdespassword()),
 				":desemail"=>$this->getdesemail(),
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
@@ -156,7 +157,9 @@ class User extends Model {
 		$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = :iduser", array(
 			":iduser"=>$iduser
 		));
-
+		
+		$results["desperson"] = utf8_encode($results["desperson"]);
+		
 		$this->setData($results[0]);
 	}
 
@@ -168,14 +171,14 @@ class User extends Model {
 		$results = $sql->select("CALL `sp_usersupdate_save`(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
 				":iduser"=>$this->getiduser(),
-				":desperson"=>$this->getdesperson(),
+				":desperson"=>utf8_decode($this->getdesperson()),
 				":deslogin"=>$this->getdeslogin(),
-				":despassword"=>$this->getdespassword(),
+				":despassword"=>User::getPasswordHash($this->getdespassword()),
 				":desemail"=>$this->getdesemail(),
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
 		));
-
+		$results["desperson"] = utf8_encode($results["desperson"]);
 		$this->setData($results[0]);
 
 	}
