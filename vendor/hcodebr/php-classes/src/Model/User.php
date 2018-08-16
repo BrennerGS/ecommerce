@@ -138,7 +138,7 @@ class User extends Model {
 
 		$results = $sql->select("CALL `sp_users_save`(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
-				":desperson"=>utf8_decode($this->getdesperson()),
+				":desperson"=>$this->getdesperson(),
 				":deslogin"=>$this->getdeslogin(),
 				":despassword"=>User::getPasswordHash($this->getdespassword()),
 				":desemail"=>$this->getdesemail(),
@@ -159,7 +159,7 @@ class User extends Model {
 			":iduser"=>$iduser
 		));
 		
-		$results["desperson"] = utf8_encode($results["desperson"]);
+		
 		
 		$this->setData($results[0]);
 	}
@@ -172,14 +172,14 @@ class User extends Model {
 		$results = $sql->select("CALL `sp_usersupdate_save`(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
 				":iduser"=>$this->getiduser(),
-				":desperson"=>utf8_decode($this->getdesperson()),
+				":desperson"=>$this->getdesperson(),
 				":deslogin"=>$this->getdeslogin(),
 				":despassword"=>User::getPasswordHash($this->getdespassword()),
 				":desemail"=>$this->getdesemail(),
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
 		));
-		$results["desperson"] = utf8_encode($results["desperson"]);
+		
 		$this->setData($results[0]);
 
 	}
@@ -195,7 +195,7 @@ class User extends Model {
 
 	}
 
-	public static function getForgot($email)
+	public static function getForgot($email, $inadmin = true)
 	{
 
 		$sql = new Sql();
@@ -225,15 +225,18 @@ class User extends Model {
 
 				$code = base64_encode(openssl_encrypt($dataRecovery["idrecovery"], 'aes-128-ecb', User::SECRET, OPENSSL_RAW_DATA));;
 
-
-				$link = "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$code";
+				if($inadmin === true){
+					$link = "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$code";
+				}else{
+					$link = "http://www.hcodecommerce.com.br/forgot/reset?code=$code";
+				}
 
 				$mailer = new Mailer($data["desemail"], $data["desperson"], "Redefinir Sua Senha da Hcode Store", "forgot",
-					array(
-						"name"=>$data["desperson"],
-						"link"=>$link
+						array(
+							"name"=>$data["desperson"],
+							"link"=>$link
 
-				));
+					));
 
 				$mailer->send();
 
@@ -289,7 +292,7 @@ class User extends Model {
 
 	}
 
-	public function setPassword($password, $user)
+	public function setPassword($password)
 	{
 
 		$sql = new Sql();
