@@ -15,14 +15,15 @@ class User extends Model {
 	const SECRET = "HcodePhp7_Secretteste";
 	const ERROR = "UserError";
 	const ERROR_REGISTER = "UserErrorRegister";
+	const SUCCESS = "UserSucesss";
 
 	public static function getFromSession()
 	{
 		$user = new User();
 
 		if(isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0)
-		{
-			$user->setData($_SESSION[User::SESSION]);
+		{	
+			$user->get($_SESSION[User::SESSION]['iduser']);
 		}
 		return $user;
 
@@ -138,7 +139,7 @@ class User extends Model {
 
 		$results = $sql->select("CALL `sp_users_save`(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
-				":desperson"=>$this->getdesperson(),
+				":desperson"=>utf8_encode($this->getdesperson()),
 				":deslogin"=>$this->getdeslogin(),
 				":despassword"=>User::getPasswordHash($this->getdespassword()),
 				":desemail"=>$this->getdesemail(),
@@ -172,9 +173,9 @@ class User extends Model {
 		$results = $sql->select("CALL `sp_usersupdate_save`(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
 				":iduser"=>$this->getiduser(),
-				":desperson"=>$this->getdesperson(),
+				":desperson"=>utf8_encode($this->getdesperson()),
 				":deslogin"=>$this->getdeslogin(),
-				":despassword"=>User::getPasswordHash($this->getdespassword()),
+				":despassword"=>$this->getdespassword(),
 				":desemail"=>$this->getdesemail(),
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
@@ -327,6 +328,28 @@ class User extends Model {
  		
  	}
 
+		
+	public static function setSuccess($msg)
+	{
+
+ 		$_SESSION[User::SUCCESS] = $msg;
+
+ 	}
+ 	public static function getSuccess()
+	{
+
+ 		$msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
+
+ 		User::clearSuccess();
+
+ 		return $msg;
+ 	}
+ 	public static function clearSuccess()
+	{
+
+ 		$_SESSION[User::SUCCESS] = NULL;
+
+ 	}
 
 
  	public static function setErrorRegister($msg)

@@ -17,6 +17,13 @@ $app = new Slim();
 
 $app->config('debug', true);
 
+$app->get('/api', function() {
+
+	$products = Products::listAll();
+    
+	var_dump(json_encode($products));
+
+});
 
 // Site Clientes 
 require_once("site.php");
