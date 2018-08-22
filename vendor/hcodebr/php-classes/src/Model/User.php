@@ -173,7 +173,7 @@ class User extends Model {
 		$results = $sql->select("CALL `sp_usersupdate_save`(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)",
 			array(
 				":iduser"=>$this->getiduser(),
-				":desperson"=>utf8_encode($this->getdesperson()),
+				":desperson"=>$this->getdesperson(),
 				":deslogin"=>$this->getdeslogin(),
 				":despassword"=>$this->getdespassword(),
 				":desemail"=>$this->getdesemail(),
